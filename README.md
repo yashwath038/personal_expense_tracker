@@ -1,211 +1,123 @@
 # Personal Expense Tracker API
 
-A RESTful API to manage personal financial records, allowing users to record income and expenses, retrieve past transactions, and get summaries by category or time period.
+A simple Node.js and Express-based API for managing personal expenses, with an SQLite database for data storage. This API allows users to add, view, update, and delete expenses, making it a helpful tool for tracking personal finances.
+
+## Features
+
+- **Add Expense**: Record a new expense with details like description, amount, category, and date.
+- **View Expenses**: Retrieve a list of all expenses or a single expense by ID.
+- **Update Expense**: Modify existing expense details.
+- **Delete Expense**: Remove an expense from the tracker.
+- **SQLite Database**: Data is stored in an SQLite database file for easy management and portability.
+
+## Prerequisites
+
+- [Node.js](https://nodejs.org/) (version 14 or above)
+- [SQLite3](https://sqlite.org/) installed locally
+
+## Installation
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/your-username/Personal-Expense-Tracker.git
+   cd Personal-Expense-Tracker
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Setup SQLite Database**:
+   - Ensure `sqlite3` is installed.
+   - Create a new file `expenses.db` in the root directory or use the `/create-expenses-table` endpoint to automatically create the required table in the database.
+
+4. **Run the Application**:
+   ```bash
+   node app.js
+   ```
+
+   The server will start at `http://localhost:3000/`.
+
+## API Endpoints
+
+### Create Expenses Table
+- **Endpoint**: `/create-expenses-table`
+- **Method**: `GET`
+- **Description**: Sets up the `expenses` table in the SQLite database if it doesn't already exist.
+
+### Add Expense
+- **Endpoint**: `/expenses`
+- **Method**: `POST`
+- **Body Parameters**:
+  - `description` (string): Description of the expense.
+  - `amount` (number): Expense amount.
+  - `category` (string): Category of the expense (e.g., food, transport).
+  - `date` (string): Date of the expense in `YYYY-MM-DD` format.
+- **Response**: `Expense added successfully` on success.
+
+### Get All Expenses
+- **Endpoint**: `/expenses`
+- **Method**: `GET`
+- **Description**: Retrieves all expense records.
+- **Response**: Array of expense objects.
+
+### Get Expense by ID
+- **Endpoint**: `/expenses/:id`
+- **Method**: `GET`
+- **Description**: Retrieves a single expense by its ID.
+- **Response**: Expense object or `Expense not found`.
+
+### Update Expense
+- **Endpoint**: `/expenses/:id`
+- **Method**: `PUT`
+- **Body Parameters**:
+  - `description` (string): Updated description of the expense.
+  - `amount` (number): Updated amount.
+  - `category` (string): Updated category.
+  - `date` (string): Updated date in `YYYY-MM-DD` format.
+- **Response**: `Expense updated successfully` on success or `Expense not found`.
+
+### Delete Expense
+- **Endpoint**: `/expenses/:id`
+- **Method**: `DELETE`
+- **Description**: Deletes an expense by its ID.
+- **Response**: `Expense deleted successfully` on success or `Expense not found`.
+
+## Project Structure
+
+```plaintext
+.
+├── app.js            # Main application file
+├── expenses.db       # SQLite database file
+└── README.md         # Project documentation
+```
 
 ## Technologies Used
 
-- **Backend**: Node.js with Express.js
-- **Database**: SQLite or MongoDB (Mongoose)
-- **Other**: Postman (for API testing)
+- **Node.js**: JavaScript runtime
+- **Express.js**: Web framework for building APIs
+- **SQLite3**: Lightweight SQL database engine
+- **bcrypt**: Library for hashing passwords (if user authentication is added in the future)
+
+## Future Enhancements
+
+- **User Authentication**: Secure login and signup for multiple users.
+- **Enhanced Expense Categories**: Add predefined categories and subcategories.
+- **Data Visualization**: Charts and graphs for better insights into spending patterns.
+
+## License
+
+This project is licensed under the MIT License. Please look at the [LICENSE](LICENSE) file for details.
+
+## Contact
+
+If you have any questions or feedback, please feel free to reach out.
 
 ---
 
-## Setup Instructions
+**Thank you for using the Personal Expense Tracker API! Happy tracking!**
 
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/yashwath038/personal_expense_tracker.git
-cd personal-expense-tracker
-```
-
-### 2. Install Dependencies
-
-Ensure you have **Node.js** installed. Then, install the required packages by running:
-
-```bash
-npm install
-```
-
-### 3. Configure the Database
-
-Depending on your choice of database, configure either SQLite or MongoDB.
-
-- **For SQLite**: Ensure SQLite is installed, and a database file will be generated automatically.
-- **For MongoDB**: Create a `.env` file with the MongoDB connection string:
-
-```bash
-MONGO_URI=mongodb://localhost:27017/expense-tracker
-```
-
-### 4. Start the Server
-
-You can start the server using the following command:
-
-```bash
-npm start
-```
-
-By default, the server runs on `http://localhost:3000`.
-
----
-
-## API Endpoints Documentation
-
-### 1. **POST /transactions** - Add a new transaction
-
-**Request**:
-```http
-POST /transactions
-Content-Type: application/json
-{
-  "type": "income", // or "expense"
-  "category": "salary",
-  "amount": 1000,
-  "description": "Salary for October"
-}
-```
-
-**Response** (Success):
-```json
-{
-  "id": 1,
-  "type": "income",
-  "category": "salary",
-  "amount": 1000,
-  "date": "2024-10-01T00:00:00Z",
-  "description": "Salary for October"
-}
-```
-
----
-
-### 2. **GET /transactions** - Retrieve all transactions
-
-**Request**:
-```http
-GET /transactions
-```
-
-**Response** (Success):
-```json
-[
-  {
-    "id": 1,
-    "type": "income",
-    "category": "salary",
-    "amount": 1000,
-    "date": "2024-10-01T00:00:00Z",
-    "description": "Salary for October"
-  },
-  {
-    "id": 2,
-    "type": "expense",
-    "category": "groceries",
-    "amount": 100,
-    "date": "2024-10-02T00:00:00Z",
-    "description": "Weekly groceries"
-  }
-]
-```
-
----
-
-### 3. **GET /transactions/:id** - Retrieve a transaction by ID
-
-**Request**:
-```http
-GET /transactions/1
-```
-
-**Response** (Success):
-```json
-{
-  "id": 1,
-  "type": "income",
-  "category": "salary",
-  "amount": 1000,
-  "date": "2024-10-01T00:00:00Z",
-  "description": "Salary for October"
-}
-```
-
-**Response** (Not Found):
-```json
-{
-  "error": "Transaction not found"
-}
-```
-
----
-
-### 4. **PUT /transactions/:id** - Update a transaction by ID
-
-**Request**:
-```http
-PUT /transactions/1
-Content-Type: application/json
-{
-  "amount": 1100,
-  "description": "Updated salary"
-}
-```
-
-**Response** (Success):
-```json
-{
-  "id": 1,
-  "type": "income",
-  "category": "salary",
-  "amount": 1100,
-  "date": "2024-10-01T00:00:00Z",
-  "description": "Updated salary"
-}
-```
-
----
-
-### 5. **DELETE /transactions/:id** - Delete a transaction by ID
-
-**Request**:
-```http
-DELETE /transactions/1
-```
-
-**Response** (Success):
-```json
-{
-  "id": 1,
-  "type": "income",
-  "category": "salary",
-  "amount": 1100,
-  "date": "2024-10-01T00:00:00Z",
-  "description": "Updated salary"
-}
-```
-
----
-
-### 6. **GET /summary** - Get a summary of all transactions
-
-**Request**:
-```http
-GET /summary
-```
-
-**Response** (Success):
-```json
-{
-  "totalIncome": 1000,
-  "totalExpenses": 500,
-  "balance": 500
-}
-```
-
----
-
-## Error Handling
-
-- **400 Bad Request**: Invalid inputs or missing required fields
-- **404 Not Found**: When a transaction with the given ID is not found
-- **500 Internal Server Error**: For unexpected errors
+### Notes:
+1. Replace `your-username` in the `git clone` command with your GitHub username.
+2. This `README.md` assumes basic usage and provides a helpful overview of the API’s functionality and setup process.
